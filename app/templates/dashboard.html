@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Corporativo</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 <body>
     <div class="dashboard-container">
@@ -53,10 +54,6 @@
                     <h1 class="page-title">Dashboard</h1>
                 </div>
                 <div class="header-right">
-                    <div class="notifications" aria-label="Notificações">
-                        <i class="fas fa-bell" style="font-size: 18px; color: var(--text-secondary);"></i>
-                        <div class="notification-badge"></div>
-                    </div>
                     <div class="user-profile" tabindex="0" aria-label="Perfil do usuário">
                         <div class="user-avatar">{{ user_initials or "US" }}</div>
                         <div class="user-info">
@@ -79,4 +76,169 @@
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
                     <ul class="mensagens-flash">
-                        {% for message in messages
+                        {% for message in messages %}
+                        <li class="mensagem-flash">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Saudação -->
+                <h2 class="titulo-saudacao">Bem-vindo, {{ nome_usuario or "usuário" }}!</h2>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Total de Usuários</span>
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        </div>
+                        <div class="stat-value">{{ total_usuarios or 0 }}</div>
+                        <div class="stat-change positive">
+                            ↗ +{{ variacao_usuarios or '0%' }} em relação ao mês anterior
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Projetos Ativos</span>
+                            <div class="stat-icon"><i class="fas fa-folder"></i></div>
+                        </div>
+                        <div class="stat-value">{{ projetos_ativos or 0 }}</div>
+                        <div class="stat-change positive">
+                            ↗ +{{ variacao_projetos or '0%' }} em relação ao mês anterior
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Taxa de Conclusão</span>
+                            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        </div>
+                        <div class="stat-value">{{ taxa_conclusao or "0%" }}</div>
+                        <div class="stat-change positive">
+                            ↗ +{{ variacao_conclusao or '0%' }} em relação ao mês anterior
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Receita Mensal</span>
+                            <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        </div>
+                        <div class="stat-value">R$ {{ receita_mensal or "0,00" }}</div>
+                        <div class="stat-change negative">
+                            ↘ {{ variacao_receita or '0%' }} em relação ao mês anterior
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload de Arquivo -->
+                <form method="POST" action="{{ url_for('main.upload_arquivo') }}" enctype="multipart/form-data" class="form-upload">
+                    <label for="file-upload">Enviar arquivo:</label>
+                    <input type="file" name="file" id="file-upload" required>
+                    <button type="submit"><i class="fas fa-upload"></i> Upload</button>
+                </form>
+
+                <!-- Lista de Arquivos do Usuário -->
+                <h3>Meus arquivos enviados:</h3>
+                <ul>
+                {% for arq in arquivos %}
+                  <li style="margin-bottom:16px; background:#fff; border-radius:8px; padding:14px 18px;">
+                    <b>{{ arq.nome_arquivo }}</b>
+                    <a href="{{ url_for('main.download_arquivo', arquivo_id=arq.id) }}">Baixar</a>
+                    {% if arq.resumo %}
+                        <br><i>Resumo IA:</i> {{ arq.resumo }}
+                        <form method="POST" action="{{ url_for('main.gerar_resumo', arquivo_id=arq.id) }}" style="display:inline;">
+                            <button type="submit">Atualizar resumo IA</button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('main.gerar_resumo', arquivo_id=arq.id) }}" style="display:inline;">
+                            <button type="submit">Gerar resumo IA</button>
+                        </form>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('main.delete_arquivo', arquivo_id=arq.id) }}" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este arquivo?');">
+                        <button type="submit" class="logout-btn" style="background: var(--danger); margin-left:8px;">
+                            <i class="fas fa-trash-alt"></i> Excluir
+                        </button>
+                    </form>
+                    <form method="GET" action="{{ url_for('main.analisar_arquivo', arquivo_id=arq.id) }}" style="display:inline;">
+                        <button type="submit" style="margin-left:8px;">
+                            <i class="fas fa-chart-bar"></i> Analisar arquivo
+                        </button>
+                    </form>
+                  </li>
+                {% else %}
+                  <li>Nenhum arquivo enviado.</li>
+                {% endfor %}
+                </ul>
+
+                <!-- Processamento em Lote -->
+                <h4 style="margin-top:30px;">Selecionar arquivos para gerar resumo IA em lote:</h4>
+                <form method="POST" action="{{ url_for('main.gerar_resumo_lote') }}">
+                  <ul>
+                    {% for arq in arquivos %}
+                      <li>
+                        <input type="checkbox" name="arquivos_ids" value="{{ arq.id }}" id="ck-arq-{{ arq.id }}">
+                        <label for="ck-arq-{{ arq.id }}">{{ arq.nome_arquivo }}</label>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  <button type="submit"><i class="fas fa-robot"></i> Gerar resumo IA em lote</button>
+                </form>
+
+                <!-- Gráficos (placeholders) -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Desempenho Mensal</span>
+                        </div>
+                        <div id="chart-desempenho" class="grafico-placeholder">
+                            <span class="texto-grafico-placeholder">[Gráfico será exibido aqui]</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Distribuição por Setor</span>
+                        </div>
+                        <div id="chart-setor" class="grafico-placeholder">
+                            <span class="texto-grafico-placeholder">[Gráfico de pizza será exibido aqui]</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atividades Recentes (pode customizar depois) -->
+                <div class="atividade-topo">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Atividades Recentes</h3>
+                        <a href="#" class="view-all">Ver todas</a>
+                    </div>
+                    <ul class="activity-list">
+                        {% for atividade in atividades %}
+                        <li class="activity-item">
+                            <div class="activity-icon">{{ atividade.icon }}</div>
+                            <div class="activity-content">
+                                <div class="activity-text">{{ atividade.texto }}</div>
+                                <div class="activity-time">{{ atividade.tempo }}</div>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="activity-item">
+                            <div class="activity-icon"><i class="fas fa-bell"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-text">Nenhuma atividade recente.</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+        // Adapte para responsividade extra se quiser
+    </script>
+</body>
+</html>

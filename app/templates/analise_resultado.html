@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Análise do Arquivo</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 30px; }
+        .container { max-width: 750px; background: #fff; margin: auto; border-radius: 12px; box-shadow: 0 2px 10px #0002; padding: 32px;}
+        h1 { color: #667eea; }
+        h2 { color: #444; }
+        .erro { color: #b71c1c; background: #ffdada; padding: 8px 16px; border-radius: 5px; }
+        ul { margin-left: 22px; }
+        .grafico { margin: 28px 0; text-align: center; }
+        .voltar { margin-top: 20px; display: inline-block; color: #fff; background: #667eea; padding: 8px 20px; border-radius: 6px; text-decoration: none; }
+        .voltar:hover { background: #4957b8; }
+        .info { margin: 18px 0; }
+        .preview { background: #f3f3f7; border-radius: 6px; padding: 14px; margin: 16px 0; font-size: 1.03em; color: #333; }
+        table { border-collapse: collapse; margin-top: 10px;}
+        td, th { border: 1px solid #ccd; padding: 6px 12px;}
+        th { background: #eef1fa;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Análise do Arquivo</h1>
+        <h2>{{ arq.nome_arquivo }}</h2>
+
+        {% if resultado.erro %}
+            <div class="erro">{{ resultado.erro }}</div>
+        {% else %}
+            {% if resultado.grafico %}
+                <div class="grafico">
+                    <img src="{{ url_for('static', filename=resultado.grafico) }}" alt="Gráfico gerado" style="max-width: 90%;">
+                </div>
+            {% endif %}
+
+            <div class="info">
+                {% if resultado.linhas is defined %}
+                    <b>Linhas:</b> {{ resultado.linhas }}<br>
+                    <b>Colunas:</b> {{ resultado.colunas | join(', ') }}<br>
+                {% endif %}
+                {% if resultado.soma_colunas is defined %}
+                    <b>Soma por coluna:</b>
+                    <ul>
+                        {% for k, v in resultado.soma_colunas.items() %}
+                        <li><b>{{ k }}:</b> {{ v }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if resultado.media_colunas is defined %}
+                    <b>Média por coluna:</b>
+                    <ul>
+                        {% for k, v in resultado.media_colunas.items() %}
+                        <li><b>{{ k }}:</b> {{ v }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if resultado.info is defined %}
+                    <b>Resumo estatístico:</b>
+                    <table>
+                        <tr>
+                            <th>Coluna</th>
+                            {% for stat in resultado.info.keys()|list %}
+                                <th>{{ stat }}</th>
+                            {% endfor %}
+                        </tr>
+                        {% for col, stats in resultado.info.items() %}
+                        <tr>
+                            <td>{{ col }}</td>
+                            {% for stat in stats.values() %}
+                                <td>{{ stat }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                {% if resultado.total_paragrafos is defined %}
+                    <b>Total de parágrafos:</b> {{ resultado.total_paragrafos }}<br>
+                {% endif %}
+                {% if resultado.total_palavras is defined %}
+                    <b>Total de palavras:</b> {{ resultado.total_palavras }}<br>
+                    <b>Palavras mais comuns:</b>
+                    <ul>
+                        {% for palavra, qtd in resultado.palavras_mais_comuns %}
+                        <li><b>{{ palavra }}</b>: {{ qtd }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if resultado.preview_texto is defined %}
+                    <div class="preview">
+                        <b>Prévia do texto:</b><br>
+                        {{ resultado.preview_texto }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('main.dashboard') }}" class="voltar">← Voltar para Dashboard</a>
+    </div>
+</body>
+</html>
