@@ -173,7 +173,7 @@
 
                 <!-- Processamento em Lote -->
                 <h4 style="margin-top:30px;">Selecionar arquivos para gerar resumo IA em lote:</h4>
-                <form method="POST" action="{{ url_for('main.gerar_resumo_lote') }}">
+                <form method="POST" action="{{ url_for('main.gerar_resumo', arquivo_id=arq.id) }}">
                   <ul>
                     {% for arq in arquivos %}
                       <li>
