@@ -1,0 +1,6 @@
+SECRET_KEY = 'sua-chave-secreta'
+DB_HOST = 'localhost'
+DB_USER = 'root'
+DB_PASSWORD = 'NovaSenhaForte123!'
+DB_NAME = 'dashboard'
+UPLOAD_FOLDER = 'app/static/uploads'

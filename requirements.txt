@@ -1,0 +1,12 @@
+flask
+mysql-connector-python
+python-dotenv
+werkzeug
+openai
+PyPDF2
+python-docx
+openpyxl
+xlrd
+sumy
+transformers 
+torch

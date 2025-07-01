@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #fafbfc;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 25px 0 20px 0;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .terms {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+
+        .terms a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        .password-strength {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group.half {
+            width: calc(50% - 7.5px);
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="logo">
+            <h1>Sistema Corporativo</h1>
+            <p>Crie sua conta</p>
+        </div>
+        
+        <form action="/register" method="post">
+            <div class="form-section">
+                <div class="section-title">Informações Pessoais</div>
+                
+                <div class="form-group">
+                    <label for="nome">Nome Completo <span class="required">*</span></label>
+                    <input type="text" id="nome" name="nome" required 
+                           placeholder="Digite seu nome completo"
+                           title="Informe seu nome completo">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Corporativo <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required 
+                           placeholder="seu.email@empresa.com"
+                           title="Informe seu email corporativo">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="section-title">Informações Profissionais</div>
+                
+                <div class="form-group">
+                    <label for="setor">Setor/Departamento <span class="required">*</span></label>
+                    <input type="text" id="setor" name="setor" required 
+                           placeholder="Ex: Recursos Humanos, TI, Financeiro"
+                           title="Informe seu setor ou departamento">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <div class="section-title">Segurança</div>
+                
+                <div class="form-group">
+                    <label for="senha">Senha <span class="required">*</span></label>
+                    <input type="password" id="senha" name="senha" required 
+                           placeholder="Crie uma senha segura"
+                           title="Crie uma senha com pelo menos 8 caracteres">
+                    <div class="password-strength">
+                        Mínimo 8 caracteres, incluindo letras e números
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-register">Criar Conta</button>
+            
+            <div class="terms">
+                Ao criar uma conta, você concorda com nossos 
+                <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>
+            </div>
+        </form>
+        
+        <div class="login-link">
+            <a href="/login">Já possui uma conta? Faça login</a>
+        </div>
+    </div>
+</body>
+</html>

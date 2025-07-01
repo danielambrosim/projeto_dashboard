@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Corporativo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar" aria-label="Menu lateral">
+            <div class="sidebar-header">
+                <h1>Sistema</h1>
+                <p>Corporativo</p>
+            </div>
+            <div class="nav-menu" role="menu">
+                <a href="#" class="nav-item active" role="menuitem" tabindex="0">
+                    <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" role="menuitem" tabindex="0">
+                    <i class="fas fa-users" aria-hidden="true"></i>
+                    <span>Usuários</span>
+                </a>
+                <a href="#" class="nav-item" role="menuitem" tabindex="0">
+                    <i class="fas fa-folder" aria-hidden="true"></i>
+                    <span>Projetos</span>
+                </a>
+                <a href="#" class="nav-item" role="menuitem" tabindex="0">
+                    <i class="fas fa-chart-line" aria-hidden="true"></i>
+                    <span>Relatórios</span>
+                </a>
+                <a href="#" class="nav-item" role="menuitem" tabindex="0">
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    <span>Configurações</span>
+                </a>
+                <a href="#" class="nav-item" role="menuitem" tabindex="0">
+                    <i class="fas fa-headset" aria-hidden="true"></i>
+                    <span>Suporte</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="maincontent">
+            <!-- Header -->
+            <header class="header" role="banner">
+                <div class="header-left">
+                    <button class="menu-toggle" aria-label="Alternar menu lateral" onclick="toggleSidebar()" tabindex="0">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="notifications" aria-label="Notificações">
+                        <i class="fas fa-bell" style="font-size: 18px; color: var(--text-secondary);"></i>
+                        <div class="notification-badge"></div>
+                    </div>
+                    <div class="user-profile" tabindex="0" aria-label="Perfil do usuário">
+                        <div class="user-avatar">{{ user_initials or "US" }}</div>
+                        <div class="user-info">
+                            <h4>{{ nome_usuario or "Usuário" }}</h4>
+                            <p>{{ setor_usuario or "Setor" }}</p>
+                        </div>
+                    </div>
+                    <form method="get" action="{{ url_for('auth.logout') }}" class="form-inline">
+                        <button type="submit" class="logout-btn" aria-label="Sair">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Sair
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class="mensagens-flash">
+                        {% for message in messages

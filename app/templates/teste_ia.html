@@ -1,0 +1,8 @@
+<form method="POST" enctype="multipart/form-data">
+    <label for="file-upload">Selecione um arquivo para testar IA:</label>
+    <input type="file" name="file" id="file-upload" required>
+    <button type="submit">Gerar resumo IA</button>
+</form>
+{% if resumo %}
+  <p><b>Resumo IA:</b> {{ resumo }}</p>
+{% endif %}
