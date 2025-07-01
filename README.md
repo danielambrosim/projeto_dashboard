@@ -42,7 +42,7 @@ Sistema web para gestão, upload e análise de arquivos, com suporte a geração
 2. **Crie um ambiente virtual**
     ```bash
     python -m venv venv
-    source venv/bin/activate  # (ou venv\Scripts\activate no Windows)
+    source .\venv\Scripts\Activate # (ou venv\Scripts\activate no Windows)
 
 3. **Instale as dependências**
     ```bash
