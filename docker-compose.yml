@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: development
+      SECRET_KEY: ${SECRET_KEY}
+      MYSQL_HOST: db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      USE_OPENAI: ${USE_OPENAI}
+      UPLOAD_FOLDER: uploads
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - ./uploads:/app/uploads
+
+volumes:
+  dbdata:
